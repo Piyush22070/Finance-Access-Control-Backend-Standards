@@ -1,6 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
+
+    #Initial values for configuration 
     DATABASE_URL: str = "sqlite:///./test.db"
     REDIS_URL: str = "redis://localhost:6379/0"
     SECRET_KEY: str = "secret"
@@ -9,6 +11,7 @@ class Settings(BaseSettings):
     INITIAL_ADMIN_EMAIL: str = "admin@finance.com"
     INITIAL_ADMIN_PASSWORD: str = "admin@123"
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    # Load environment variables 
+    model_config = SettingsConfigDict(env_file_encoding="utf-8", extra="ignore")
 
 settings = Settings()

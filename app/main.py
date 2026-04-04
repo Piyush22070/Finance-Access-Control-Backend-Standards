@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import IntegrityError
@@ -19,7 +18,6 @@ def create_tables():
 def get_application() -> FastAPI:
     application = FastAPI(title = "Finance Dashboard API", version = "1.0.0")
     
-    load_dotenv()
     create_tables()
     bootstrap_system()
     

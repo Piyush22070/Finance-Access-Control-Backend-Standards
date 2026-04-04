@@ -12,6 +12,7 @@ def bootstrap_system():
         email = settings.INITIAL_ADMIN_EMAIL
         secret_password = settings.INITIAL_ADMIN_PASSWORD
         db = SessionLocal()
+        print("Database : ",settings.DATABASE_URL)
         
         if not db.query(User).filter(User.email == email).first():
             new_user = User(

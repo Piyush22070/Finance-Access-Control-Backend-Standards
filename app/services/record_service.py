@@ -1,4 +1,7 @@
+from datetime import date
 import json
+from typing import Optional
+
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -47,15 +50,33 @@ class RecordService:
     
 
     
-    def get_records(self,skip: int = 0, limit: int = 10):
-        cache_key = f"records:all:skip:{skip}:limit:{limit}"
+    def get_records(
+        self, 
+        skip: int = 0, 
+        limit: int = 10,
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
+        category: Optional[str] = None,
+        transaction_type: Optional[str] = None
+    ):
+
+        cache_key = f"records:all:skip:{skip}:limit:{limit}:start:{start_date}:end:{end_date}:cat:{category}:type:{transaction_type}"
         cached_data = redis_client.get(cache_key)
 
         if cached_data:
             return json.loads(cached_data)
 
-        records = self.records_repository.get_records(skip=skip, limit=limit)
+        # cache miss
+        records = self.records_repository.get_records(
+            skip=skip, 
+            limit=limit,
+            start_date=start_date,
+            end_date=end_date,
+            category=category,
+            transaction_type=transaction_type
+        )
         
+        #cache
         if records:
             redis_client.setex(cache_key, 300, json.dumps(jsonable_encoder(records)))
         

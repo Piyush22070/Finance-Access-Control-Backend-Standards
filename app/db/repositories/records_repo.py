@@ -1,4 +1,7 @@
+from datetime import date
+from typing import Optional
 from sqlalchemy.orm import Session
+
 from app.db.models.records_model import Record
 
 class RecordsRepository:
@@ -13,8 +16,26 @@ class RecordsRepository:
         return record_data
     
 
-    def get_records(self, skip: int = 0, limit: int = None):
+    def get_records(
+        self, 
+        skip: int = 0, 
+        limit: int = None, 
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
+        category: Optional[str] = None,
+        transaction_type: Optional[str] = None
+    ):
         query = self.db.query(Record)
+
+        if start_date:
+            query = query.filter(Record.date >= start_date)
+        if end_date:
+            query = query.filter(Record.date <= end_date)
+        if category:
+            query = query.filter(Record.category == category)
+        if transaction_type:
+            query = query.filter(Record.transaction_type == transaction_type)
+
         return query.offset(skip).limit(limit).all()
 
 

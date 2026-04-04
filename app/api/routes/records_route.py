@@ -1,6 +1,8 @@
+from datetime import date
+
 from fastapi import APIRouter, Depends,Header,Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from app.db.database import get_db
 from app.schemas.record_schemas import RecordCreate, RecordResponse, RecordUpdate
 from app.services.record_service import RecordService
@@ -25,15 +27,25 @@ def create_record(
 
 
 # READ ALL admin, analyst and viewer 
-@router.get("/",response_model=List[RecordResponse], dependencies=[Depends(role_required(["admin","analyst"]))])
+@router.get("/", response_model=List[RecordResponse])
 def get_all_records(
     skip: int = Query(0, ge=0), 
     limit: int = Query(10, ge=1, le=100),
+    start_date: Optional[date] = Query(None, description="Filter by start date (YYYY-MM-DD)"),
+    end_date: Optional[date] = Query(None, description="Filter by end date (YYYY-MM-DD)"),
+    category: Optional[str] = Query(None, description="Filter by category (e.g., Food, Rent)"),
+    transaction_type: Optional[str] = Query(None, description="Filter by type (e.g., income, expense)"),
     db: Session = Depends(get_db),
 ):
     record_service = RecordService(db)
-    record = record_service.get_records(skip=skip, limit=limit)
-    return record
+    return record_service.get_records(
+        skip=skip, 
+        limit=limit,
+        start_date=start_date,
+        end_date=end_date,
+        category=category,
+        transaction_type=transaction_type
+    )
 
 
 
