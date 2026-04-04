@@ -11,6 +11,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 def get_current_user(token : str= Depends(oauth2_scheme), db: Session = Depends(get_db)):
 
+    is_blacklisted = redis_client.get(f"blacklist:{token}")
+    if is_blacklisted:
+        raise HTTPException(
+            status_code=401, 
+            detail="Token has been revoked (User logged out)"
+        )
+
     try:
         payload = jwt.decode(token, settings.SECRET_KEY , algorithms=[settings.ALGORITHM])
         email : str = payload.get("sub")

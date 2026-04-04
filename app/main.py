@@ -7,7 +7,7 @@ from app.db.database import engine, Base
 from app.api.erros import sqlalchemy_integrity_exception_handler, global_exception_handler
 from app.api.routes import auth_route, users_route, records_route, dashboard_route
 from app.db.init_db import bootstrap_system
-
+from app.core.descriptions import description
 
 
 
@@ -16,7 +16,8 @@ def create_tables():
 
 
 def get_application() -> FastAPI:
-    application = FastAPI(title = "Finance Dashboard API", version = "1.0.0")
+   
+    application = FastAPI(title = "Finance Dashboard API", description=description,version = "1.0.0")
     
     create_tables()
     bootstrap_system()

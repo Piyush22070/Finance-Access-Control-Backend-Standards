@@ -26,4 +26,7 @@ class AuthService:
 
         return token
     
+    def blacklist_token(self, token: str):
+        redis_client.set(f"blacklist:{token}", "true", ex=1800)
+    
 auth_service = AuthService() 

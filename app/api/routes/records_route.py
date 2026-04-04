@@ -26,8 +26,8 @@ def create_record(
 
 
 
-# READ ALL admin, analyst and viewer 
-@router.get("/", response_model=List[RecordResponse])
+# READ ALL admin, analyst
+@router.get("/", response_model=List[RecordResponse],dependencies=[Depends(role_required(["admin","analyst"]))])
 def get_all_records(
     skip: int = Query(0, ge=0), 
     limit: int = Query(10, ge=1, le=100),
