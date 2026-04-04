@@ -3,6 +3,9 @@
 ## Overview
 This repository contains the backend implementation for a Finance Dashboard System, developed as part of the Zorvyn FinTech Pvt. Ltd. Backend Developer Internship assessment. 
 
+#Screen Shots
+![Alternative Text](architecture.png)
+
 The system is built using **FastAPI, PostgreSQL, and Redis**, focusing heavily on clean architecture, performance optimization, and robust security. It features Role-Based Access Control (RBAC), multi-tiered caching strategies, idempotent API endpoints, and a strictly separated service-repository architectural pattern.
 
 ## Architecture and Tech Stack
