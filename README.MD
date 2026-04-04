@@ -57,7 +57,14 @@ This will spin up the FastAPI application, PostgreSQL database, and Redis cache 
 ```bash
 # Build and start the containers
 docker-compose up --build -d
+```
 
+```bash
+# docker-compose is not working 
+docker compose up --build -d
+```
+
+```bash
 # Check the logs to ensure successful startup
 docker-compose logs -f app
 ```
