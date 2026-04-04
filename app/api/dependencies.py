@@ -7,7 +7,7 @@ from app.core.config import settings
 from app.db.repositories.user_repo import UserRepository
 from fastapi.security import OAuth2PasswordBearer
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 def get_current_user(token : str= Depends(oauth2_scheme), db: Session = Depends(get_db)):
 
