@@ -50,32 +50,8 @@ Implemented a custom dependency injection pipeline for authentication and author
 * Docker and Docker Compose
 * Python 3.10+ (If running locally without Docker)
 
-### 1. Environment Configuration
-Create a `.env` file in the root directory and copy the contents from `.env.example`.
 
-**`.env.example`**
-```bash
-# Application Configuration
-APP_ENV=development
-SECRET_KEY=your_super_secret_jwt_key
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-# PostgreSQL Configuration
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=finance_db
-POSTGRES_HOST=db
-POSTGRES_PORT=5432
-DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-
-# Redis Configuration
-REDIS_HOST=redis
-REDIS_PORT=6379
-REDIS_URL=redis://${REDIS_HOST}:${REDIS_PORT}/0
-```
-
-### 2. Running via Docker Compose (Recommended)
+### 1. Running via Docker Compose (Recommended)
 This will spin up the FastAPI application, PostgreSQL database, and Redis cache in interconnected containers.
 
 ```bash
@@ -88,7 +64,7 @@ docker-compose logs -f app
 The application will be available at: `http://localhost:8000`
 Interactive API Documentation (Swagger UI): `http://localhost:8000/docs`
 
-### 3. Running Locally (Without Docker)
+### 2. Running Locally (Without Docker)
 If you prefer to run the application on your host machine (requires local instances of PostgreSQL and Redis running):
 
 ```bash
@@ -111,6 +87,13 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ---
+## ⚠️ Important Authentication Note
+Most endpoints are protected.
+
+Default Admin Credentials:
+
+Username: `admin@finance.com`
+Password: `admin@123`
 
 ## Core API Endpoints
 
@@ -120,9 +103,9 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 * `POST /api/auth/logout` - Invalidate current session in Redis
 
 ### Financial Records
-* `POST /api/records/` - Create a new record (Requires `X-Request-ID` header. Roles: Admin, Analyst)
-* `GET /api/records/` - Retrieve paginated records (Roles: Admin, Analyst, Viewer)
-* `GET /api/records/{record_id}` - Retrieve specific record (Roles: Admin, Analyst, Viewer)
+* `POST /api/records/` - Create a new record (Requires `X-Request-ID` header. Roles: Admin)
+* `GET /api/records/` - Retrieve paginated filter based records (Roles: Admin, Analyst)
+* `GET /api/records/{record_id}` - Retrieve specific record (Roles: Admin, Analyst)
 * `PATCH /api/records/{record_id}` - Update a record (Role: Admin)
 * `DELETE /api/records/{record_id}` - Delete a record (Role: Admin)
 
@@ -136,4 +119,3 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 1.  **Offset Pagination vs. Cursor Pagination:** For this implementation, `skip` and `limit` (offset pagination) were utilized for simplicity. For a production system dealing with millions of financial records, this would be swapped to keyset/cursor pagination using `id > last_seen_id` to prevent performance degradation on deep queries.
 2.  **Hard Deletes vs. Soft Deletes:** The current implementation uses hard deletes for simplicity. In a real-world financial application, records would utilize soft deletes (an `is_deleted` boolean or `deleted_at` timestamp) to maintain audit trails.
 3.  **Redis Cache Coherency:** Cache invalidation logic is tightly coupled within the Service layer. While effective, a future iteration could decouple this using an event-driven architecture (e.g., publishing invalidation events to a message broker).
-```
