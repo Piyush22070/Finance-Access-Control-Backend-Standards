@@ -1,7 +1,7 @@
-# Finance Data Processing and Access Control Backend
+# Finance and Access Control Backend
 
 ## Overview
-This repository contains the backend implementation for a Finance Dashboard System, developed as part of the Zorvyn FinTech Pvt. Ltd. Backend Developer Internship assessment. 
+This repository contains the backend implementation for a Finance Dashboard System.
 
 # Architecture
 ![Alternative Text](architecture.png)
