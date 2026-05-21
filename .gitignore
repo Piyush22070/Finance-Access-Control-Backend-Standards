@@ -44,4 +44,4 @@ temp/
 backend-key.pem
 
 
-github_deploy_key*
+azure-VPS-key*
