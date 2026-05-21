@@ -16,7 +16,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.USERNAME }}
+          username: azureuser
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/azureuser/Finance-Access-Control-Backend-Standards
