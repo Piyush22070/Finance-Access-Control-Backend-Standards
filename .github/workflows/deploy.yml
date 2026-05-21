@@ -1,0 +1,30 @@
+name: Deploy Backend to Azure VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Execute remote SSH deployment commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/azureuser/Finance-Access-Control-Backend-Standards
+            
+            # Pull the latest code changes from the main branch
+            git fetch --all
+            git reset --hard origin/main
+            
+            # Force Docker to rebuild modified code layers and launch containers in detached mode
+            docker compose down
+            docker compose up -d --build
