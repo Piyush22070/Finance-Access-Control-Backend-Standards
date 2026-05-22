@@ -1,0 +1,3 @@
+ssh -i azure-VPS-key azureuser@4.240.63.242
+
+
